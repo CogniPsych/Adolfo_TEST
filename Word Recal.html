@@ -691,15 +691,14 @@
     </div>
 
     <script>
-        // Firebase configuration - IMPORTANT: Update these with your Firebase project details
-        // Instructions at the end of this file
+        // Firebase configuration
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyDdmF5sxguuggbgs5gOA_0GvattYW0RxSc",
+            authDomain: "cognitive-psych-wrmt.firebaseapp.com",
+            projectId: "cognitive-psych-wrmt",
+            storageBucket: "cognitive-psych-wrmt.firebasestorage.app",
+            messagingSenderId: "113260037728",
+            appId: "1:113260037728:web:1b234eac3b3cce000da505"
         };
 
         // Initialize Firebase
@@ -713,7 +712,7 @@
             auth = firebase.auth();
             firebaseReady = true;
         } catch (error) {
-            console.error("Firebase initialization failed. Please update firebaseConfig with your credentials:", error);
+            console.error("Firebase initialization failed:", error);
         }
 
         // Word lists
@@ -790,7 +789,7 @@
             const participantsList = document.getElementById('participantsList');
             
             if (!firebaseReady) {
-                participantsList.innerHTML = '<p style="text-align: center; color: #f44336;">Firebase not configured. Please update the firebaseConfig.</p>';
+                participantsList.innerHTML = '<p style="text-align: center; color: #f44336;">Firebase not configured.</p>';
                 return;
             }
 
@@ -818,7 +817,7 @@
                 participantsList.innerHTML = html;
             } catch (error) {
                 console.error('Error loading participants:', error);
-                participantsList.innerHTML = '<p style="text-align: center; color: #f44336;">Error loading participants. Make sure Firestore is accessible.</p>';
+                participantsList.innerHTML = '<p style="text-align: center; color: #f44336;">Error loading participants.</p>';
             }
         }
 
@@ -1095,52 +1094,5 @@
             showScreen('roleScreen');
         }
     </script>
-
-    <!-- 
-    SETUP INSTRUCTIONS:
-    
-    1. Create a Firebase Project:
-       - Go to https://firebase.google.com/
-       - Click "Get Started" and create a new project
-       - Name it something like "Adolfo_TEST"
-    
-    2. Enable Firestore:
-       - In Firebase Console, go to "Firestore Database"
-       - Click "Create Database"
-       - Start in "Test mode" (you can restrict access later)
-       - Choose a region close to your users
-    
-    3. Get Your Firebase Config:
-       - In Firebase Console, go to Project Settings (gear icon)
-       - Scroll down to "SDK setup and configuration"
-       - Copy your config object (looks like the firebaseConfig variable below)
-    
-    4. Update the Configuration:
-       - Replace the firebaseConfig object above with your actual Firebase credentials
-       - Make sure all fields are filled: apiKey, authDomain, projectId, storageBucket, messagingSenderId, appId
-    
-    5. Set Firestore Security Rules (IMPORTANT):
-       - Go to Firestore → Rules
-       - Replace the default rules with:
-       
-       rules_version = '2';
-       service cloud.firestore {
-         match /databases/{database}/documents {
-           match /participants/{document=**} {
-             allow read, write: if true;
-           }
-         }
-       }
-       
-       Note: This allows anyone to read/write. For production, use authentication.
-    
-    6. Test the Application:
-       - Open this HTML file in a browser
-       - Create a test participant (this will save to Firestore)
-       - Login as Admin with password: "cognitive"
-       - You should see the participant data saved in Firestore
-    
-    All participant data is now stored online in Firestore and accessible to admins with the password.
-    -->
 </body>
 </html>
