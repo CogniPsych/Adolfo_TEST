@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recognition Memory Test</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
     <style>
         * {
             margin: 0;
@@ -499,6 +503,28 @@
             margin-bottom: 20px;
         }
 
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .success-message {
+            color: #4caf50;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+
         @media (max-width: 768px) {
             .results-columns {
                 grid-template-columns: 1fr;
@@ -658,12 +684,38 @@
             <div class="completion-screen">
                 <h2>✓ Test Complete</h2>
                 <p>Thank you for completing the test! Your results have been saved.</p>
+                <div id="saveStatus"></div>
                 <button class="btn-primary" onclick="resetToRole()">Return to Home</button>
             </div>
         </div>
     </div>
 
     <script>
+        // Firebase configuration - IMPORTANT: Update these with your Firebase project details
+        // Instructions at the end of this file
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        let db;
+        let auth;
+        let firebaseReady = false;
+
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.firestore();
+            auth = firebase.auth();
+            firebaseReady = true;
+        } catch (error) {
+            console.error("Firebase initialization failed. Please update firebaseConfig with your credentials:", error);
+        }
+
         // Word lists
         const firstList = ['Garden', 'Giraffe', 'Pencil', 'Market', 'Bridge', 'Forest', 'Basket'];
         const secondList = ['Giraffe', 'Garden', 'Pencil', 'Market', 'Bridge', 'Forest', 'Basket', 'Orange', 'Button', 'Rocket', 'Hammer', 'Turtle', 'Carpet', 'Lantern'];
@@ -734,40 +786,62 @@
             loadParticipantsList();
         }
 
-        function loadParticipantsList() {
-            const participants = JSON.parse(localStorage.getItem('participants') || '[]');
+        async function loadParticipantsList() {
             const participantsList = document.getElementById('participantsList');
             
-            if (participants.length === 0) {
-                participantsList.innerHTML = '<p style="text-align: center; color: #999;">No participants yet</p>';
+            if (!firebaseReady) {
+                participantsList.innerHTML = '<p style="text-align: center; color: #f44336;">Firebase not configured. Please update the firebaseConfig.</p>';
                 return;
             }
 
-            let html = '';
-            participants.forEach((participant, index) => {
-                html += `
-                    <div class="participant-item" onclick="viewParticipantResults(${index})">
-                        <div class="participant-name">${participant.name}</div>
-                        <div class="participant-timestamp">${new Date(participant.timestamp).toLocaleString()}</div>
-                    </div>
-                `;
-            });
-            participantsList.innerHTML = html;
+            try {
+                participantsList.innerHTML = '<div class="loading-spinner"></div><p style="text-align: center; color: #999;">Loading participants...</p>';
+                
+                const querySnapshot = await db.collection('participants').orderBy('timestamp', 'desc').get();
+                
+                if (querySnapshot.empty) {
+                    participantsList.innerHTML = '<p style="text-align: center; color: #999;">No participants yet</p>';
+                    return;
+                }
+
+                let html = '';
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const timestamp = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleString() : 'Unknown';
+                    html += `
+                        <div class="participant-item" onclick="viewParticipantResults('${doc.id}')">
+                            <div class="participant-name">${data.name}</div>
+                            <div class="participant-timestamp">${timestamp}</div>
+                        </div>
+                    `;
+                });
+                participantsList.innerHTML = html;
+            } catch (error) {
+                console.error('Error loading participants:', error);
+                participantsList.innerHTML = '<p style="text-align: center; color: #f44336;">Error loading participants. Make sure Firestore is accessible.</p>';
+            }
         }
 
-        function viewParticipantResults(index) {
-            const participants = JSON.parse(localStorage.getItem('participants') || '[]');
-            const participant = participants[index];
-            
-            showScreen('adminResultViewScreen');
-            displayAdminResults(participant);
+        async function viewParticipantResults(docId) {
+            try {
+                const doc = await db.collection('participants').doc(docId).get();
+                if (doc.exists) {
+                    showScreen('adminResultViewScreen');
+                    displayAdminResults(doc.data());
+                }
+            } catch (error) {
+                console.error('Error fetching participant results:', error);
+                alert('Error loading results. Please try again.');
+            }
         }
 
         function displayAdminResults(participant) {
             const resultsDisplay = document.getElementById('adminResultsDisplay');
             
+            const timestamp = participant.timestamp ? new Date(participant.timestamp.toDate()).toLocaleString() : 'Unknown';
+            
             let html = `<h2>Test Results - ${participant.name}</h2>`;
-            html += `<p style="text-align: center; color: #999; margin-bottom: 20px;">Completed: ${new Date(participant.timestamp).toLocaleString()}</p>`;
+            html += `<p style="text-align: center; color: #999; margin-bottom: 20px;">Completed: ${timestamp}</p>`;
             
             html += `
                 <div class="results-columns">
@@ -989,28 +1063,84 @@
             }
         }
 
-        function saveAndCompleteTest() {
-            // Save participant results to localStorage
-            const participants = JSON.parse(localStorage.getItem('participants') || '[]');
-            participants.push({
-                name: userName,
-                timestamp: new Date().toISOString(),
-                responses: responses
-            });
-            localStorage.setItem('participants', JSON.stringify(participants));
-            
-            // Show completion screen
+        async function saveAndCompleteTest() {
             showScreen('completionScreen');
+            const saveStatusDiv = document.getElementById('saveStatus');
+            
+            if (!firebaseReady) {
+                saveStatusDiv.innerHTML = '<div class="error-message">Firebase not configured. Results not saved.</div>';
+                return;
+            }
+
+            try {
+                saveStatusDiv.innerHTML = '<div class="loading-spinner"></div><p style="text-align: center; color: #999;">Saving results...</p>';
+                
+                await db.collection('participants').add({
+                    name: userName,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    responses: responses
+                });
+
+                saveStatusDiv.innerHTML = '<div class="success-message">✓ Results saved successfully!</div>';
+            } catch (error) {
+                console.error('Error saving results:', error);
+                saveStatusDiv.innerHTML = '<div class="error-message">Error saving results. Please contact administrator.</div>';
+            }
         }
 
         function resetToRole() {
-            showScreen('roleScreen');
             userName = '';
-            userRole = '';
             responses = [];
             currentWordIndex = 0;
-            document.getElementById('nameInput').value = '';
+            showScreen('roleScreen');
         }
     </script>
+
+    <!-- 
+    SETUP INSTRUCTIONS:
+    
+    1. Create a Firebase Project:
+       - Go to https://firebase.google.com/
+       - Click "Get Started" and create a new project
+       - Name it something like "Adolfo_TEST"
+    
+    2. Enable Firestore:
+       - In Firebase Console, go to "Firestore Database"
+       - Click "Create Database"
+       - Start in "Test mode" (you can restrict access later)
+       - Choose a region close to your users
+    
+    3. Get Your Firebase Config:
+       - In Firebase Console, go to Project Settings (gear icon)
+       - Scroll down to "SDK setup and configuration"
+       - Copy your config object (looks like the firebaseConfig variable below)
+    
+    4. Update the Configuration:
+       - Replace the firebaseConfig object above with your actual Firebase credentials
+       - Make sure all fields are filled: apiKey, authDomain, projectId, storageBucket, messagingSenderId, appId
+    
+    5. Set Firestore Security Rules (IMPORTANT):
+       - Go to Firestore → Rules
+       - Replace the default rules with:
+       
+       rules_version = '2';
+       service cloud.firestore {
+         match /databases/{database}/documents {
+           match /participants/{document=**} {
+             allow read, write: if true;
+           }
+         }
+       }
+       
+       Note: This allows anyone to read/write. For production, use authentication.
+    
+    6. Test the Application:
+       - Open this HTML file in a browser
+       - Create a test participant (this will save to Firestore)
+       - Login as Admin with password: "cognitive"
+       - You should see the participant data saved in Firestore
+    
+    All participant data is now stored online in Firestore and accessible to admins with the password.
+    -->
 </body>
 </html>
