@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Word Recall Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 40px auto;
+      line-height: 1.6;
+      color: #222;
+      padding: 0 16px;
+    }
+    .screen { display: none; }
+    .screen.active { display: block; }
+    input[type="text"] {
+      padding: 10px;
+      width: 100%;
+      max-width: 420px;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 18px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .word {
+      font-size: 28px;
+      font-weight: bold;
+      text-align: center;
+      margin: 40px 0;
+      min-height: 48px;
+    }
+    .note {
+      font-size: 13px;
+      color: #444;
+      margin-top: -4px;
+      margin-bottom: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div id="screen-participant" class="screen active">
+    <h2>Please enter PARTICIPANT NUMBER</h2>
+    <p class="note">Your PARTICIPANT NUMBER is at the top of your information form.</p>
+    <input id="participantNumber" type="text" placeholder="PARTICIPANT NUMBER" />
+    <br />
+    <button id="startBtn">Start</button>
+  </div>
+
+  <div id="screen-instructions" class="screen">
+    <h2>Instructions</h2>
+    <p>You will see a list of words one at a time. Try to remember as many words on the list as possible.</p>
+    <p>After each list, you will be asked to solve simple math problems and then recall the words on the list.</p>
+    <button id="beginTrialBtn">Begin</button>
+  </div>
+
+  <div id="screen-word" class="screen">
+    <div class="word" id="wordDisplay"></div>
+  </div>
+
+  <div id="screen-math" class="screen">
+    <h2>Solve the following</h2>
+    <p id="mathQuestion"></p>
+    <input id="mathAnswer" type="text" placeholder="Your answer" />
+    <br />
+    <button id="submitMathBtn">Submit</button>
+  </div>
+
+  <div id="screen-recall" class="screen">
+    <h2>Recall</h2>
+    <p>Please type all words you remember from the list.</p>
+    <textarea id="recallInput" rows="8" style="width:100%;max-width:600px;"></textarea>
+    <br /><br />
+    <button id="submitRecallBtn">Submit Recall</button>
+  </div>
+
+  <div id="screen-done" class="screen">
+    <h2>Thank you!</h2>
+    <p>Your responses have been recorded.</p>
+  </div>
+
+  <script>
+    const screens = {
+      participant: document.getElementById('screen-participant'),
+      instructions: document.getElementById('screen-instructions'),
+      word: document.getElementById('screen-word'),
+      math: document.getElementById('screen-math'),
+      recall: document.getElementById('screen-recall'),
+      done: document.getElementById('screen-done')
+    };
+
+    function showScreen(name) {
+      Object.values(screens).forEach(s => s.classList.remove('active'));
+      screens[name].classList.add('active');
+    }
+
+    const startBtn = document.getElementById('startBtn');
+    const beginTrialBtn = document.getElementById('beginTrialBtn');
+    const submitMathBtn = document.getElementById('submitMathBtn');
+    const submitRecallBtn = document.getElementById('submitRecallBtn');
+
+    const wordDisplay = document.getElementById('wordDisplay');
+    const mathQuestion = document.getElementById('mathQuestion');
+    const mathAnswer = document.getElementById('mathAnswer');
+
+    const participantNumberInput = document.getElementById('participantNumber');
+    const recallInput = document.getElementById('recallInput');
+
+    const wordLists = [
+      ['apple', 'chair', 'river', 'clock', 'bread', 'mountain', 'pencil', 'garden'],
+      ['window', 'orange', 'paper', 'engine', 'flower', 'camera', 'planet', 'bridge']
+    ];
+
+    const mathSets = [
+      [
+        { q: '(6 x 4) + 5', a: '29' },
+        { q: '18 ÷ 3 + 2', a: '8' }
+      ],
+      [
+        { q: '(2 x 5) + 23', a: '33' },
+        { q: '(4 x 7) ÷ 2', a: '14' },
+        { q: '(9 x 3) - 7', a: '20' },
+        { q: '16 ÷ 4 + 9', a: '13' }
+      ]
+    ];
+
+    let currentListIndex = 0;
+    let currentWordIndex = 0;
+    let currentMathIndex = 0;
+
+    const responses = {
+      participantNumber: '',
+      math: [[], []],
+      recall: ['', '']
+    };
+
+    startBtn.addEventListener('click', () => {
+      const participantNumber = participantNumberInput.value.trim();
+      if (!participantNumber) {
+        alert('Please enter your PARTICIPANT NUMBER.');
+        return;
+      }
+      responses.participantNumber = participantNumber;
+      showScreen('instructions');
+    });
+
+    beginTrialBtn.addEventListener('click', () => {
+      currentListIndex = 0;
+      showWords();
+    });
+
+    function showWords() {
+      showScreen('word');
+      currentWordIndex = 0;
+      const words = wordLists[currentListIndex];
+
+      function nextWord() {
+        if (currentWordIndex < words.length) {
+          wordDisplay.textContent = words[currentWordIndex];
+          currentWordIndex++;
+          setTimeout(nextWord, 1000);
+        } else {
+          wordDisplay.textContent = '';
+          startMath();
+        }
+      }
+
+      nextWord();
+    }
+
+    function startMath() {
+      showScreen('math');
+      currentMathIndex = 0;
+      askMath();
+    }
+
+    function askMath() {
+      const currentSet = mathSets[currentListIndex];
+      if (currentMathIndex >= currentSet.length) {
+        startRecall();
+        return;
+      }
+
+      mathQuestion.textContent = currentSet[currentMathIndex].q;
+      mathAnswer.value = '';
+      mathAnswer.focus();
+    }
+
+    submitMathBtn.addEventListener('click', () => {
+      const currentSet = mathSets[currentListIndex];
+      const item = currentSet[currentMathIndex];
+      responses.math[currentListIndex].push({
+        question: item.q,
+        expected: item.a,
+        given: mathAnswer.value.trim()
+      });
+      currentMathIndex++;
+      askMath();
+    });
+
+    function startRecall() {
+      showScreen('recall');
+      recallInput.value = '';
+      recallInput.focus();
+    }
+
+    submitRecallBtn.addEventListener('click', () => {
+      responses.recall[currentListIndex] = recallInput.value.trim();
+      if (currentListIndex === 0) {
+        currentListIndex = 1;
+        showWords();
+      } else {
+        console.log('Experiment complete:', responses);
+        showScreen('done');
+      }
+    });
+  </script>
+</body>
+</html>
