@@ -5,12 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recognition Memory Test</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -20,7 +15,6 @@
             align-items: center;
             padding: 20px;
         }
-
         .container {
             background: white;
             border-radius: 15px;
@@ -29,14 +23,7 @@
             max-width: 900px;
             width: 100%;
         }
-
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 28px;
-        }
-
+        h1 { color: #333; text-align: center; margin-bottom: 20px; font-size: 28px; }
         .content {
             text-align: center;
             min-height: 400px;
@@ -45,49 +32,13 @@
             justify-content: center;
             align-items: center;
         }
-
-        .instruction-screen {
-            line-height: 1.8;
-            color: #333;
-            font-size: 16px;
-        }
-
-        .instruction-screen p {
-            margin-bottom: 15px;
-        }
-
-        .instruction-screen ul {
-            text-align: left;
-            display: inline-block;
-            margin-bottom: 20px;
-        }
-
-        .instruction-screen li {
-            margin-bottom: 10px;
-            line-height: 1.6;
-        }
-
-        .name-input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .name-input-group p {
-            font-size: 18px;
-            color: #333;
-            font-weight: 500;
-            margin-bottom: 10px;
-        }
-
-        .participant-note {
-            font-size: 13px;
-            color: #666;
-            margin-top: -8px;
-            margin-bottom: 4px;
-        }
-
+        .instruction-screen { line-height: 1.8; color: #333; font-size: 16px; }
+        .instruction-screen p { margin-bottom: 15px; }
+        .instruction-screen ul { text-align: left; display: inline-block; margin-bottom: 20px; }
+        .instruction-screen li { margin-bottom: 10px; line-height: 1.6; }
+        .name-input-group { display: flex; flex-direction: column; gap: 20px; align-items: center; }
+        .name-input-group p { font-size: 18px; color: #333; font-weight: 500; margin-bottom: 10px; }
+        .participant-note { font-size: 13px; color: #666; margin-top: -8px; margin-bottom: 4px; }
         .name-input-group input {
             padding: 12px 20px;
             font-size: 16px;
@@ -96,13 +47,11 @@
             min-width: 300px;
             text-align: center;
         }
-
         .name-input-group input:focus {
             outline: none;
             border-color: #5568d3;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
-
         .word-display {
             font-size: 64px;
             font-weight: bold;
@@ -111,31 +60,8 @@
             letter-spacing: 2px;
             animation: fadeIn 0.3s ease-in-out;
         }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        .countdown {
-            font-size: 48px;
-            color: #667eea;
-            font-weight: bold;
-            margin: 40px 0;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-top: 40px;
-            flex-wrap: wrap;
-        }
-
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .button-group { display: flex; gap: 20px; justify-content: center; margin-top: 40px; flex-wrap: wrap; }
         button {
             padding: 15px 40px;
             font-size: 18px;
@@ -146,392 +72,65 @@
             font-weight: 600;
             min-width: 150px;
         }
-
-        .btn-primary {
-            background: #667eea;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #5568d3;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-secondary {
-            background: #999;
-            color: white;
-            padding: 10px 20px;
-            font-size: 14px;
-            min-width: auto;
-        }
-
-        .btn-secondary:hover {
-            background: #777;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(153, 153, 153, 0.4);
-        }
-
-        .btn-was-in {
-            background: #4caf50;
-            color: white;
-            min-width: 280px;
-            font-size: 16px;
-        }
-
-        .btn-was-in:hover {
-            background: #388e3c;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
-        }
-
-        .btn-was-not-in {
-            background: #f44336;
-            color: white;
-            min-width: 280px;
-            font-size: 16px;
-        }
-
-        .btn-was-not-in:hover {
-            background: #d32f2f;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(244, 67, 54, 0.4);
-        }
-
-        .results-screen {
-            text-align: left;
-            background: #f0f4ff;
-            padding: 30px;
-            border-radius: 10px;
-            max-height: 600px;
-            overflow-y: auto;
-        }
-
-        .results-screen h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 25px;
-            font-size: 24px;
-        }
-
-        .results-columns {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-
-        .results-column {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-        }
-
-        .results-column h3 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 18px;
-            text-align: center;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e0e0e0;
-        }
-
-        .old-column h3 {
-            color: #4caf50;
-        }
-
-        .new-column h3 {
-            color: #f44336;
-        }
-
-        .result-item {
-            padding: 12px 0;
-            border-bottom: 1px solid #e0e0e0;
-            font-size: 15px;
-            color: #333;
-        }
-
-        .result-item:last-child {
-            border-bottom: none;
-        }
-
-        .result-word {
-            font-weight: 600;
-            color: #667eea;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .result-correct {
-            color: #4caf50;
-            font-weight: 600;
-        }
-
-        .result-incorrect {
-            color: #f44336;
-            font-weight: 600;
-        }
-
-        .result-details {
-            font-size: 13px;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        .score-summary {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 20px;
-            text-align: center;
-            font-size: 18px;
-        }
-
-        .score-number {
-            font-size: 32px;
-            color: #667eea;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .timer-display {
-            font-size: 36px;
-            color: #667eea;
-            font-weight: bold;
-            margin: 30px 0;
-        }
-
-        .math-problem-screen {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 30px;
-        }
-
-        .math-problem {
-            font-size: 48px;
-            color: #667eea;
-            font-weight: bold;
-            background: #f0f4ff;
-            padding: 40px;
-            border-radius: 10px;
-            min-width: 250px;
-        }
-
-        .math-instruction {
-            font-size: 18px;
-            color: #333;
-            font-weight: 500;
-        }
-
-        .math-input-group {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .math-input {
-            font-size: 18px;
-            padding: 12px 20px;
-            border: 2px solid #667eea;
-            border-radius: 8px;
-            min-width: 150px;
-            text-align: center;
-        }
-
-        .math-input:focus {
-            outline: none;
-            border-color: #5568d3;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .btn-submit {
-            background: #667eea;
-            color: white;
-            padding: 12px 30px;
-            font-size: 16px;
-        }
-
-        .btn-submit:hover {
-            background: #5568d3;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .error-message {
-            color: #f44336;
-            font-size: 16px;
-            font-weight: 600;
-            margin-top: 15px;
-            animation: shake 0.5s ease-in-out;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-
-        .first-list-header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 30px;
-        }
-
-        .first-list-header p {
-            font-size: 18px;
-            color: #666;
-        }
-
-        .question-box {
-            font-size: 16px;
-            color: #333;
-            font-weight: 500;
-            margin-bottom: 20px;
-            background: #f0f4ff;
-            padding: 12px 20px;
-            border-radius: 8px;
-            display: inline-block;
-        }
-
-        .role-selection-group {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            align-items: center;
-        }
-
-        .role-selection-group p {
-            font-size: 20px;
-            color: #333;
-            font-weight: 600;
-        }
-
-        .btn-role {
-            background: #667eea;
-            color: white;
-            padding: 20px 50px;
-            font-size: 18px;
-            min-width: 250px;
-        }
-
-        .btn-role:hover {
-            background: #5568d3;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .admin-list {
-            background: #f0f4ff;
-            padding: 30px;
-            border-radius: 10px;
-            max-height: 600px;
-            overflow-y: auto;
-            text-align: left;
-        }
-
-        .admin-list h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 25px;
-            font-size: 24px;
-        }
-
-        .participant-item {
-            background: white;
-            padding: 15px 20px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-left: 4px solid #667eea;
-        }
-
-        .participant-item:hover {
-            background: #f0f4ff;
-            transform: translateX(5px);
-            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.2);
-        }
-
-        .participant-name {
-            font-size: 16px;
-            color: #333;
-            font-weight: 600;
-        }
-
-        .participant-timestamp {
-            font-size: 12px;
-            color: #999;
-            margin-top: 5px;
-        }
-
-        .btn-back {
-            background: #999;
-            color: white;
-            padding: 12px 30px;
-            font-size: 16px;
-            margin-top: 20px;
-        }
-
-        .btn-back:hover {
-            background: #777;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(153, 153, 153, 0.4);
-        }
-
-        .completion-screen {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .completion-screen h2 {
-            color: #4caf50;
-            font-size: 28px;
-        }
-
-        .completion-screen p {
-            color: #333;
-            font-size: 18px;
-            margin-bottom: 20px;
-        }
-
+        .btn-primary { background: #667eea; color: white; }
+        .btn-primary:hover { background: #5568d3; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102,126,234,0.4); }
+        .btn-secondary { background: #999; color: white; padding: 10px 20px; font-size: 14px; min-width: auto; }
+        .btn-secondary:hover { background: #777; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(153,153,153,0.4); }
+        .btn-was-in { background: #4caf50; color: white; min-width: 280px; font-size: 16px; }
+        .btn-was-in:hover { background: #388e3c; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(76,175,80,0.4); }
+        .btn-was-not-in { background: #f44336; color: white; min-width: 280px; font-size: 16px; }
+        .btn-was-not-in:hover { background: #d32f2f; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(244,67,54,0.4); }
+        .results-screen { text-align: left; background: #f0f4ff; padding: 30px; border-radius: 10px; max-height: 600px; overflow-y: auto; width: 100%; }
+        .results-screen h2 { text-align: center; color: #333; margin-bottom: 25px; font-size: 24px; }
+        .results-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px; }
+        .results-column { background: white; padding: 20px; border-radius: 8px; }
+        .results-column h3 { color: #333; margin-bottom: 15px; font-size: 18px; text-align: center; padding-bottom: 10px; border-bottom: 2px solid #e0e0e0; }
+        .old-column h3 { color: #4caf50; }
+        .new-column h3 { color: #f44336; }
+        .result-item { padding: 12px 0; border-bottom: 1px solid #e0e0e0; font-size: 15px; color: #333; }
+        .result-item:last-child { border-bottom: none; }
+        .result-word { font-weight: 600; color: #667eea; display: block; margin-bottom: 5px; }
+        .result-correct { color: #4caf50; font-weight: 600; }
+        .result-incorrect { color: #f44336; font-weight: 600; }
+        .result-details { font-size: 13px; color: #666; margin-top: 5px; }
+        .score-summary { background: white; padding: 20px; border-radius: 8px; margin-top: 20px; text-align: center; font-size: 18px; }
+        .score-number { font-size: 32px; color: #667eea; font-weight: bold; margin: 10px 0; }
+        .hidden { display: none; }
+        .timer-display { font-size: 36px; color: #667eea; font-weight: bold; margin: 30px 0; }
+        .math-problem-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 30px; }
+        .math-problem { font-size: 48px; color: #667eea; font-weight: bold; background: #f0f4ff; padding: 40px; border-radius: 10px; min-width: 250px; }
+        .math-instruction { font-size: 18px; color: #333; font-weight: 500; }
+        .math-input-group { display: flex; gap: 15px; justify-content: center; align-items: center; }
+        .math-input { font-size: 18px; padding: 12px 20px; border: 2px solid #667eea; border-radius: 8px; min-width: 150px; text-align: center; }
+        .math-input:focus { outline: none; border-color: #5568d3; box-shadow: 0 0 0 3px rgba(102,126,234,0.1); }
+        .btn-submit { background: #667eea; color: white; padding: 12px 30px; font-size: 16px; }
+        .btn-submit:hover { background: #5568d3; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102,126,234,0.4); }
+        .error-message { color: #f44336; font-size: 16px; font-weight: 600; margin-top: 15px; animation: shake 0.5s ease-in-out; }
+        @keyframes shake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-5px);} 75%{transform:translateX(5px);} }
+        .first-list-header { display: flex; justify-content: center; align-items: center; width: 100%; margin-bottom: 30px; }
+        .first-list-header p { font-size: 18px; color: #666; }
+        .question-box { font-size: 16px; color: #333; font-weight: 500; margin-bottom: 20px; background: #f0f4ff; padding: 12px 20px; border-radius: 8px; display: inline-block; }
+        .role-selection-group { display: flex; flex-direction: column; gap: 30px; align-items: center; }
+        .role-selection-group p { font-size: 20px; color: #333; font-weight: 600; }
+        .btn-role { background: #667eea; color: white; padding: 20px 50px; font-size: 18px; min-width: 250px; }
+        .btn-role:hover { background: #5568d3; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102,126,234,0.4); }
+        .admin-list { background: #f0f4ff; padding: 30px; border-radius: 10px; max-height: 600px; overflow-y: auto; text-align: left; width: 100%; }
+        .admin-list h2 { text-align: center; color: #333; margin-bottom: 25px; font-size: 24px; }
+        .participant-item { background: white; padding: 15px 20px; margin-bottom: 10px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #667eea; }
+        .participant-item:hover { background: #f0f4ff; transform: translateX(5px); box-shadow: 0 3px 10px rgba(102,126,234,0.2); }
+        .participant-name { font-size: 16px; color: #333; font-weight: 600; }
+        .participant-timestamp { font-size: 12px; color: #999; margin-top: 5px; }
+        .btn-back { background: #999; color: white; padding: 12px 30px; font-size: 16px; margin-top: 20px; }
+        .btn-back:hover { background: #777; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(153,153,153,0.4); }
+        .completion-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 20px; }
+        .completion-screen h2 { color: #4caf50; font-size: 28px; }
+        .completion-screen p { color: #333; font-size: 18px; margin-bottom: 20px; }
         @media (max-width: 768px) {
-            .results-columns {
-                grid-template-columns: 1fr;
-            }
-
-            .first-list-header {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .button-group {
-                flex-direction: column;
-            }
-
-            .btn-was-in,
-            .btn-was-not-in {
-                min-width: 100%;
-            }
-
-            .name-input-group input {
-                min-width: 100%;
-            }
-
-            .btn-role {
-                min-width: 100%;
-            }
+            .results-columns { grid-template-columns: 1fr; }
+            .first-list-header { flex-direction: column; gap: 15px; }
+            .button-group { flex-direction: column; }
+            .btn-was-in,.btn-was-not-in,.btn-role { min-width: 100%; }
+            .name-input-group input { min-width: 100%; }
         }
     </style>
 </head>
@@ -539,7 +138,6 @@
     <div class="container">
         <h1>🧠 Word recall attention test</h1>
 
-        <!-- Role Selection Screen -->
         <div class="content" id="roleScreen">
             <div class="role-selection-group">
                 <p>Please select your role:</p>
@@ -548,7 +146,6 @@
             </div>
         </div>
 
-        <!-- Admin Password Screen -->
         <div class="content hidden" id="adminPasswordScreen">
             <div class="name-input-group">
                 <p>Enter Admin Password:</p>
@@ -561,7 +158,6 @@
             </div>
         </div>
 
-        <!-- Admin Dashboard -->
         <div class="content hidden" id="adminDashboardScreen">
             <div class="admin-list">
                 <h2>Participant Results</h2>
@@ -570,16 +166,13 @@
             <button class="btn-back" onclick="backToRole()">Logout</button>
         </div>
 
-        <!-- Admin Result View -->
         <div class="content hidden" id="adminResultViewScreen">
             <div style="width: 100%; text-align: left;">
                 <button class="btn-back" onclick="backToAdminDashboard()">← Back to Participants</button>
             </div>
-            <div class="results-screen" id="adminResultsDisplay">
-            </div>
+            <div class="results-screen" id="adminResultsDisplay"></div>
         </div>
 
-        <!-- Name Input Screen -->
         <div class="content hidden" id="nameScreen">
             <div class="name-input-group">
                 <p>Please enter PARTICIPANT NUMBER</p>
@@ -591,7 +184,6 @@
             </div>
         </div>
 
-        <!-- Welcome Screen -->
         <div class="content hidden" id="welcomeScreen">
             <div class="instruction-screen">
                 <p><strong>Welcome to the test!</strong></p>
@@ -608,18 +200,12 @@
             </div>
         </div>
 
-        <!-- First List Display -->
         <div class="content hidden" id="firstListScreen">
-            <div class="first-list-header">
-                <p style="font-size: 18px; color: #666;">First List - Memorize These Words</p>
-            </div>
+            <div class="first-list-header"><p style="font-size: 18px; color: #666;">First List - Memorize These Words</p></div>
             <div class="word-display" id="wordDisplay"></div>
-            <div style="position: absolute; bottom: 40px; right: 40px;">
-                <button class="btn-secondary" onclick="skipFirstList()">Skip</button>
-            </div>
+            <div style="position: absolute; bottom: 40px; right: 40px;"><button class="btn-secondary" onclick="skipFirstList()">Skip</button></div>
         </div>
 
-        <!-- Math Problem Screen -->
         <div class="content hidden" id="mathProblemScreen">
             <div class="math-problem-screen">
                 <div class="math-problem" id="mathProblem">5 + (5 × 2) =</div>
@@ -632,25 +218,20 @@
             </div>
         </div>
 
-        <!-- Break Screen with Countdown -->
         <div class="content hidden" id="breakScreen">
             <p style="font-size: 18px; color: #666; margin-bottom: 20px;">Get ready for the second list...</p>
             <div class="timer-display" id="timerDisplay">10</div>
         </div>
 
-        <!-- Second List Instructions -->
         <div class="content hidden" id="secondListInstructionScreen">
             <div class="instruction-screen">
                 <p><strong>Time for the second list of words.</strong></p>
                 <p>Press the <strong>"This word was on the first list"</strong> button if the word appeared on the first list.</p>
                 <p>Press the <strong>"This word was not on the first list"</strong> button if the word did not appear on the first list.</p>
-                <div class="button-group">
-                    <button class="btn-primary" onclick="startSecondList()">Continue</button>
-                </div>
+                <div class="button-group"><button class="btn-primary" onclick="startSecondList()">Continue</button></div>
             </div>
         </div>
 
-        <!-- Second List Test -->
         <div class="content hidden" id="secondListScreen">
             <p style="font-size: 18px; color: #666; margin-bottom: 20px;" id="wordProgress"></p>
             <div class="question-box">Was this word on the first list?</div>
@@ -661,7 +242,6 @@
             </div>
         </div>
 
-        <!-- Completion Screen -->
         <div class="content hidden" id="completionScreen">
             <div class="completion-screen">
                 <h2>✓ Test Complete</h2>
@@ -671,11 +251,26 @@
         </div>
     </div>
 
-    <script>
-        // Word lists
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
+        import { getDatabase, ref, push, onValue, query, orderByChild } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js';
+
+        const firebaseConfig = {
+            apiKey: 'AIzaSyDdmF5sxguuggbgs5gOA_0GvattYW0RxSc',
+            authDomain: 'cognitive-psych-wrmt.firebaseapp.com',
+            databaseURL: 'https://cognitive-psych-wrmt-default-rtdb.firebaseio.com',
+            projectId: 'cognitive-psych-wrmt',
+            storageBucket: 'cognitive-psych-wrmt.firebasestorage.app',
+            messagingSenderId: '113260037728',
+            appId: '1:113260037728:web:1b234eac3b3cce000da505'
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const participantsRef = ref(db, 'participants');
+
         const firstList = ['Garden', 'Giraffe', 'Pencil', 'Market', 'Bridge', 'Forest', 'Basket'];
         const secondList = ['Giraffe', 'Garden', 'Pencil', 'Market', 'Bridge', 'Forest', 'Basket', 'Orange', 'Button', 'Rocket', 'Hammer', 'Turtle', 'Carpet', 'Lantern'];
-        
         const mathProblems = [
             { expression: '5 + (5 × 2)', answer: 15 },
             { expression: '(2 x 5) + 23', answer: 33 },
@@ -688,8 +283,8 @@
         let responses = [];
         let wordDisplayTimeout = null;
         let userName = '';
-        let userRole = '';
         let currentMathProblemIndex = 0;
+        let liveParticipants = [];
 
         function shuffle(array) {
             const shuffled = [...array];
@@ -701,29 +296,23 @@
         }
 
         function showScreen(screenId) {
-            document.querySelectorAll('.content').forEach(screen => {
-                screen.classList.add('hidden');
-            });
+            document.querySelectorAll('.content').forEach(screen => screen.classList.add('hidden'));
             document.getElementById(screenId).classList.remove('hidden');
         }
 
-        // Role Selection
-        function selectParticipant() {
-            userRole = 'participant';
+        window.selectParticipant = function() {
             showScreen('nameScreen');
             document.getElementById('nameInput').focus();
-        }
+        };
 
-        function selectAdmin() {
-            userRole = 'admin';
+        window.selectAdmin = function() {
             showScreen('adminPasswordScreen');
             document.getElementById('adminPassword').focus();
-        }
+        };
 
-        function submitAdminPassword() {
+        window.submitAdminPassword = function() {
             const password = document.getElementById('adminPassword').value;
             const errorMessageDiv = document.getElementById('passwordErrorMessage');
-
             if (password === 'cognitive') {
                 errorMessageDiv.textContent = '';
                 showAdminDashboard();
@@ -732,58 +321,56 @@
                 document.getElementById('adminPassword').value = '';
                 document.getElementById('adminPassword').focus();
             }
-        }
+        };
 
-        function backToRole() {
+        window.backToRole = function() {
             showScreen('roleScreen');
             document.getElementById('adminPassword').value = '';
             document.getElementById('passwordErrorMessage').textContent = '';
-        }
+        };
 
-        function backToAdminDashboard() {
-            showScreen('adminDashboardScreen');
-        }
+        window.backToAdminDashboard = function() { showScreen('adminDashboardScreen'); };
 
         function showAdminDashboard() {
             showScreen('adminDashboardScreen');
-            loadParticipantsList();
+            renderParticipantsList();
         }
 
-        function loadParticipantsList() {
-            const participants = JSON.parse(localStorage.getItem('participants') || '[]');
+        function subscribeParticipants() {
+            onValue(query(participantsRef, orderByChild('timestamp')), (snapshot) => {
+                const rows = [];
+                snapshot.forEach((child) => rows.push({ id: child.key, ...child.val() }));
+                rows.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                liveParticipants = rows;
+                renderParticipantsList();
+            });
+        }
+
+        function renderParticipantsList() {
             const participantsList = document.getElementById('participantsList');
-            
-            if (participants.length === 0) {
+            if (!liveParticipants.length) {
                 participantsList.innerHTML = '<p style="text-align: center; color: #999;">No participants yet</p>';
                 return;
             }
-
-            let html = '';
-            participants.forEach((participant, index) => {
-                html += `
-                    <div class="participant-item" onclick="viewParticipantResults(${index})">
-                        <div class="participant-name">${participant.name}</div>
-                        <div class="participant-timestamp">${new Date(participant.timestamp).toLocaleString()}</div>
-                    </div>
-                `;
-            });
-            participantsList.innerHTML = html;
+            participantsList.innerHTML = liveParticipants.map((participant, index) => `
+                <div class="participant-item" onclick="viewParticipantResults(${index})">
+                    <div class="participant-name">${participant.name}</div>
+                    <div class="participant-timestamp">${new Date(participant.timestamp).toLocaleString()}</div>
+                </div>
+            `).join('');
         }
 
-        function viewParticipantResults(index) {
-            const participants = JSON.parse(localStorage.getItem('participants') || '[]');
-            const participant = participants[index];
-            
+        window.viewParticipantResults = function(index) {
+            const participant = liveParticipants[index];
+            if (!participant) return;
             showScreen('adminResultViewScreen');
             displayAdminResults(participant);
-        }
+        };
 
         function displayAdminResults(participant) {
             const resultsDisplay = document.getElementById('adminResultsDisplay');
-            
             let html = `<h2>Test Results - ${participant.name}</h2>`;
             html += `<p style="text-align: center; color: #999; margin-bottom: 20px;">Completed: ${new Date(participant.timestamp).toLocaleString()}</p>`;
-            
             html += `
                 <div class="results-columns">
                     <div class="results-column old-column">
@@ -800,116 +387,72 @@
                     <div class="score-number" id="correctScore"></div>
                 </div>
             `;
-            
             resultsDisplay.innerHTML = html;
 
-            // Populate results
-            const oldWordResponses = participant.responses.filter(r => r.isOldWord);
-            const newWordResponses = participant.responses.filter(r => !r.isOldWord);
+            const oldWordResponses = (participant.responses || []).filter(r => r.isOldWord);
+            const newWordResponses = (participant.responses || []).filter(r => !r.isOldWord);
             const correctOldWords = oldWordResponses.filter(r => r.isCorrect);
 
-            let oldWordsHTML = '';
-            oldWordResponses.forEach(response => {
+            document.getElementById('oldWordsList').innerHTML = oldWordResponses.map(response => {
                 const statusClass = response.isCorrect ? 'result-correct' : 'result-incorrect';
                 const status = response.isCorrect ? '✓ Correct' : '✗ Incorrect';
-                
-                oldWordsHTML += `
-                    <div class="result-item">
-                        <span class="result-word">${response.word}</span>
-                        <div class="result-details">
-                            Your answer: <strong>${response.response}</strong> - <span class="${statusClass}">${status}</span>
-                        </div>
-                    </div>
-                `;
-            });
-            document.getElementById('oldWordsList').innerHTML = oldWordsHTML || '<p style="text-align: center; color: #999;">No words to display</p>';
+                return `<div class="result-item"><span class="result-word">${response.word}</span><div class="result-details">Your answer: <strong>${response.response}</strong> - <span class="${statusClass}">${status}</span></div></div>`;
+            }).join('') || '<p style="text-align: center; color: #999;">No words to display</p>';
 
-            let newWordsHTML = '';
-            newWordResponses.forEach(response => {
+            document.getElementById('newWordsList').innerHTML = newWordResponses.map(response => {
                 const statusClass = response.isCorrect ? 'result-correct' : 'result-incorrect';
                 const status = response.isCorrect ? '✓ Correct' : '✗ Incorrect';
-                
-                newWordsHTML += `
-                    <div class="result-item">
-                        <span class="result-word">${response.word}</span>
-                        <div class="result-details">
-                            Your answer: <strong>${response.response}</strong> - <span class="${statusClass}">${status}</span>
-                        </div>
-                    </div>
-                `;
-            });
-            document.getElementById('newWordsList').innerHTML = newWordsHTML || '<p style="text-align: center; color: #999;">No words to display</p>';
+                return `<div class="result-item"><span class="result-word">${response.word}</span><div class="result-details">Your answer: <strong>${response.response}</strong> - <span class="${statusClass}">${status}</span></div></div>`;
+            }).join('') || '<p style="text-align: center; color: #999;">No words to display</p>';
 
             document.getElementById('correctScore').textContent = `${correctOldWords.length} out of ${oldWordResponses.length}`;
         }
 
-        // Participant flow
-        function submitName() {
+        window.submitName = function() {
             const nameInput = document.getElementById('nameInput').value.trim();
-            if (nameInput === '') {
-                alert('Please enter your PARTICIPANT NUMBER');
-                return;
-            }
+            if (nameInput === '') { alert('Please enter your PARTICIPANT NUMBER'); return; }
             userName = nameInput;
             showScreen('welcomeScreen');
-        }
+        };
 
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('nameInput').addEventListener('keypress', function(event) {
-                if (event.key === 'Enter') {
-                    submitName();
-                }
-            });
-
-            document.getElementById('adminPassword').addEventListener('keypress', function(event) {
-                if (event.key === 'Enter') {
-                    submitAdminPassword();
-                }
-            });
-
-            document.getElementById('mathAnswer').addEventListener('keypress', function(event) {
-                if (event.key === 'Enter') {
-                    submitMathAnswer();
-                }
-            });
+            document.getElementById('nameInput').addEventListener('keypress', (event) => { if (event.key === 'Enter') window.submitName(); });
+            document.getElementById('adminPassword').addEventListener('keypress', (event) => { if (event.key === 'Enter') window.submitAdminPassword(); });
+            document.getElementById('mathAnswer').addEventListener('keypress', (event) => { if (event.key === 'Enter') window.submitMathAnswer(); });
+            subscribeParticipants();
         });
 
-        function startFirstList() {
+        window.startFirstList = function() {
             shuffledFirstList = shuffle(firstList);
             showScreen('firstListScreen');
             displayFirstListWords();
-        }
+        };
 
         function displayFirstListWords() {
             let index = 0;
             const wordDisplay = document.getElementById('wordDisplay');
-
             function showNextWord() {
                 if (index < shuffledFirstList.length) {
-                    wordDisplay.textContent = shuffledFirstList[index];
-                    index++;
+                    wordDisplay.textContent = shuffledFirstList[index++];
                     wordDisplayTimeout = setTimeout(showNextWord, 3000);
                 } else {
-                    showMathProblem();
+                    window.showMathProblem();
                 }
             }
-
             showNextWord();
         }
 
-        function skipFirstList() {
-            if (wordDisplayTimeout) {
-                clearTimeout(wordDisplayTimeout);
-            }
-            showMathProblem();
-        }
+        window.skipFirstList = function() {
+            if (wordDisplayTimeout) clearTimeout(wordDisplayTimeout);
+            window.showMathProblem();
+        };
 
-        function showMathProblem() {
+        window.showMathProblem = function() {
             currentMathProblemIndex = 0;
             showScreen('mathProblemScreen');
             loadCurrentMathProblem();
             document.getElementById('mathAnswer').focus();
-        }
+        };
 
         function loadCurrentMathProblem() {
             document.getElementById('mathProblem').textContent = `${mathProblems[currentMathProblemIndex].expression} =`;
@@ -917,125 +460,85 @@
             document.getElementById('mathErrorMessage').textContent = '';
         }
 
-        function submitMathAnswer() {
+        window.submitMathAnswer = function() {
             const userAnswer = parseInt(document.getElementById('mathAnswer').value);
             const correctAnswer = mathProblems[currentMathProblemIndex].answer;
             const errorMessageDiv = document.getElementById('mathErrorMessage');
-
             if (userAnswer === correctAnswer) {
                 errorMessageDiv.textContent = '';
                 currentMathProblemIndex++;
-
                 if (currentMathProblemIndex < mathProblems.length) {
                     loadCurrentMathProblem();
                     document.getElementById('mathAnswer').focus();
                 } else {
-                    startBreak();
+                    window.startBreak();
                 }
             } else {
                 errorMessageDiv.innerHTML = '<div class="error-message">Wrong answer, please try again</div>';
                 document.getElementById('mathAnswer').value = '';
                 document.getElementById('mathAnswer').focus();
             }
-        }
+        };
 
-        function startBreak() {
+        window.startBreak = function() {
             showScreen('breakScreen');
             let timeRemaining = 10;
             const timerDisplay = document.getElementById('timerDisplay');
-
             const countdown = setInterval(() => {
-                timerDisplay.textContent = timeRemaining;
-                timeRemaining--;
-
-                if (timeRemaining < 0) {
-                    clearInterval(countdown);
-                    showSecondListInstructions();
-                }
+                timerDisplay.textContent = timeRemaining--;
+                if (timeRemaining < 0) { clearInterval(countdown); window.showSecondListInstructions(); }
             }, 1000);
-        }
+        };
 
-        function showSecondListInstructions() {
-            showScreen('secondListInstructionScreen');
-        }
+        window.showSecondListInstructions = function() { showScreen('secondListInstructionScreen'); };
 
-        function startSecondList() {
+        window.startSecondList = function() {
             shuffledSecondList = shuffle(secondList);
             currentWordIndex = 0;
             responses = [];
             showScreen('secondListScreen');
             displaySecondListWord();
-        }
+        };
 
         function displaySecondListWord() {
-            const testWordDisplay = document.getElementById('testWordDisplay');
-            const wordProgress = document.getElementById('wordProgress');
-            
             if (currentWordIndex < shuffledSecondList.length) {
-                testWordDisplay.textContent = shuffledSecondList[currentWordIndex];
-                wordProgress.textContent = `Word ${currentWordIndex + 1} of ${shuffledSecondList.length}`;
+                document.getElementById('testWordDisplay').textContent = shuffledSecondList[currentWordIndex];
+                document.getElementById('wordProgress').textContent = `Word ${currentWordIndex + 1} of ${shuffledSecondList.length}`;
             }
         }
 
-        function respondWasIn() {
+        window.respondWasIn = function() {
             const currentWord = shuffledSecondList[currentWordIndex];
-            const isCorrect = firstList.includes(currentWord);
-            
-            responses.push({
-                word: currentWord,
-                response: 'This word was on the first list',
-                isCorrect: isCorrect,
-                isOldWord: firstList.includes(currentWord)
-            });
-
+            responses.push({ word: currentWord, response: 'This word was on the first list', isCorrect: firstList.includes(currentWord), isOldWord: firstList.includes(currentWord) });
             currentWordIndex++;
-            
-            if (currentWordIndex < shuffledSecondList.length) {
-                displaySecondListWord();
-            } else {
-                saveAndCompleteTest();
-            }
-        }
+            if (currentWordIndex < shuffledSecondList.length) displaySecondListWord(); else window.saveAndCompleteTest();
+        };
 
-        function respondNotIn() {
+        window.respondNotIn = function() {
             const currentWord = shuffledSecondList[currentWordIndex];
-            const isCorrect = !firstList.includes(currentWord);
-            
-            responses.push({
-                word: currentWord,
-                response: 'This word was not on the first list',
-                isCorrect: isCorrect,
-                isOldWord: firstList.includes(currentWord)
-            });
-
+            responses.push({ word: currentWord, response: 'This word was not on the first list', isCorrect: !firstList.includes(currentWord), isOldWord: firstList.includes(currentWord) });
             currentWordIndex++;
-            
-            if (currentWordIndex < shuffledSecondList.length) {
-                displaySecondListWord();
-            } else {
-                saveAndCompleteTest();
-            }
-        }
+            if (currentWordIndex < shuffledSecondList.length) displaySecondListWord(); else window.saveAndCompleteTest();
+        };
 
-        function saveAndCompleteTest() {
-            // Save participant results to localStorage
-            const participants = JSON.parse(localStorage.getItem('participants') || '[]');
-            participants.push({
-                name: userName,
-                timestamp: new Date().toISOString(),
-                responses: responses
-            });
-            localStorage.setItem('participants', JSON.stringify(participants));
+        window.saveAndCompleteTest = async function() {
+            try {
+                await push(participantsRef, { name: userName, timestamp: new Date().toISOString(), responses });
+            } catch (error) {
+                console.error('Failed to save participant to Firebase:', error);
+                alert('Could not save results to Firebase. Please check database rules and connection.');
+                return;
+            }
             showScreen('completionScreen');
-        }
+        };
 
-        function resetToRole() {
+        window.resetToRole = function() {
             userName = '';
             currentWordIndex = 0;
             responses = [];
             document.getElementById('nameInput').value = '';
             showScreen('roleScreen');
-        }
+        };
     </script>
 </body>
 </html>
