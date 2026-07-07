@@ -81,6 +81,13 @@
             margin-bottom: 10px;
         }
 
+        .participant-note {
+            font-size: 13px;
+            color: #666;
+            margin-top: -8px;
+            margin-bottom: 4px;
+        }
+
         .name-input-group input {
             padding: 12px 20px;
             font-size: 16px;
@@ -575,8 +582,9 @@
         <!-- Name Input Screen -->
         <div class="content hidden" id="nameScreen">
             <div class="name-input-group">
-                <p>Please enter your name to begin:</p>
-                <input type="text" id="nameInput" placeholder="Enter your name" autocomplete="off">
+                <p>Please enter PARTICIPANT NUMBER</p>
+                <div class="participant-note">Your PARTICIPANT NUMBER is at the top of your information form</div>
+                <input type="text" id="nameInput" placeholder="Enter PARTICIPANT NUMBER" autocomplete="off">
                 <div class="button-group">
                     <button class="btn-primary" onclick="submitName()">Continue</button>
                 </div>
@@ -592,8 +600,8 @@
                     <li>After reading all of the words, you will be given 10 seconds, and then you will be shown a second list of words.</li>
                 </ul>
                 <p style="margin-top: 30px;"><strong>During the second list:</strong></p>
-                <p>Press the <strong>"This word was in the first list"</strong> button if the word appeared in the first list.</p>
-                <p>Press the <strong>"This word was not in the first list"</strong> button if the word did not appear in the first list.</p>
+                <p>Press the <strong>"This word was on the first list"</strong> button if the word appeared on the first list.</p>
+                <p>Press the <strong>"This word was not on the first list"</strong> button if the word did not appear on the first list.</p>
                 <div class="button-group">
                     <button class="btn-primary" onclick="startFirstList()">Begin Test</button>
                 </div>
@@ -634,8 +642,8 @@
         <div class="content hidden" id="secondListInstructionScreen">
             <div class="instruction-screen">
                 <p><strong>Time for the second list of words.</strong></p>
-                <p>Press the <strong>"This word was in the first list"</strong> button if the word appeared in the first list.</p>
-                <p>Press the <strong>"This word was not in the first list"</strong> button if the word did not appear in the first list.</p>
+                <p>Press the <strong>"This word was on the first list"</strong> button if the word appeared on the first list.</p>
+                <p>Press the <strong>"This word was not on the first list"</strong> button if the word did not appear on the first list.</p>
                 <div class="button-group">
                     <button class="btn-primary" onclick="startSecondList()">Continue</button>
                 </div>
@@ -645,11 +653,11 @@
         <!-- Second List Test -->
         <div class="content hidden" id="secondListScreen">
             <p style="font-size: 18px; color: #666; margin-bottom: 20px;" id="wordProgress"></p>
-            <div class="question-box">Was this word in the first list?</div>
+            <div class="question-box">Was this word on the first list?</div>
             <div class="word-display" id="testWordDisplay"></div>
             <div class="button-group">
-                <button class="btn-was-in" onclick="respondWasIn()">This word was in the first list</button>
-                <button class="btn-was-not-in" onclick="respondNotIn()">This word was not in the first list</button>
+                <button class="btn-was-in" onclick="respondWasIn()">This word was on the first list</button>
+                <button class="btn-was-not-in" onclick="respondNotIn()">This word was not on the first list</button>
             </div>
         </div>
 
@@ -668,6 +676,12 @@
         const firstList = ['Garden', 'Giraffe', 'Pencil', 'Market', 'Bridge', 'Forest', 'Basket'];
         const secondList = ['Giraffe', 'Garden', 'Pencil', 'Market', 'Bridge', 'Forest', 'Basket', 'Orange', 'Button', 'Rocket', 'Hammer', 'Turtle', 'Carpet', 'Lantern'];
         
+        const mathProblems = [
+            { expression: '5 + (5 × 2)', answer: 15 },
+            { expression: '(2 x 5) + 23', answer: 33 },
+            { expression: '(4 x 7) ÷ 2', answer: 14 }
+        ];
+
         let shuffledFirstList = [];
         let shuffledSecondList = [];
         let currentWordIndex = 0;
@@ -675,6 +689,7 @@
         let wordDisplayTimeout = null;
         let userName = '';
         let userRole = '';
+        let currentMathProblemIndex = 0;
 
         function shuffle(array) {
             const shuffled = [...array];
@@ -832,7 +847,7 @@
         function submitName() {
             const nameInput = document.getElementById('nameInput').value.trim();
             if (nameInput === '') {
-                alert('Please enter your name');
+                alert('Please enter your PARTICIPANT NUMBER');
                 return;
             }
             userName = nameInput;
@@ -890,20 +905,33 @@
         }
 
         function showMathProblem() {
+            currentMathProblemIndex = 0;
             showScreen('mathProblemScreen');
+            loadCurrentMathProblem();
+            document.getElementById('mathAnswer').focus();
+        }
+
+        function loadCurrentMathProblem() {
+            document.getElementById('mathProblem').textContent = `${mathProblems[currentMathProblemIndex].expression} =`;
             document.getElementById('mathAnswer').value = '';
             document.getElementById('mathErrorMessage').textContent = '';
-            document.getElementById('mathAnswer').focus();
         }
 
         function submitMathAnswer() {
             const userAnswer = parseInt(document.getElementById('mathAnswer').value);
-            const correctAnswer = 15;
+            const correctAnswer = mathProblems[currentMathProblemIndex].answer;
             const errorMessageDiv = document.getElementById('mathErrorMessage');
 
             if (userAnswer === correctAnswer) {
                 errorMessageDiv.textContent = '';
-                startBreak();
+                currentMathProblemIndex++;
+
+                if (currentMathProblemIndex < mathProblems.length) {
+                    loadCurrentMathProblem();
+                    document.getElementById('mathAnswer').focus();
+                } else {
+                    startBreak();
+                }
             } else {
                 errorMessageDiv.innerHTML = '<div class="error-message">Wrong answer, please try again</div>';
                 document.getElementById('mathAnswer').value = '';
@@ -955,7 +983,7 @@
             
             responses.push({
                 word: currentWord,
-                response: 'This word was in the first list',
+                response: 'This word was on the first list',
                 isCorrect: isCorrect,
                 isOldWord: firstList.includes(currentWord)
             });
@@ -975,7 +1003,7 @@
             
             responses.push({
                 word: currentWord,
-                response: 'This word was not in the first list',
+                response: 'This word was not on the first list',
                 isCorrect: isCorrect,
                 isOldWord: firstList.includes(currentWord)
             });
@@ -998,18 +1026,15 @@
                 responses: responses
             });
             localStorage.setItem('participants', JSON.stringify(participants));
-            
-            // Show completion screen
             showScreen('completionScreen');
         }
 
         function resetToRole() {
-            showScreen('roleScreen');
             userName = '';
-            userRole = '';
-            responses = [];
             currentWordIndex = 0;
+            responses = [];
             document.getElementById('nameInput').value = '';
+            showScreen('roleScreen');
         }
     </script>
 </body>
